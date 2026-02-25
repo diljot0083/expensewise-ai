@@ -48,7 +48,6 @@ export const login = async (req, res) => {
             httpOnly: true,
             secure: false,
             sameSite: "lax",
-            path: "/api/refreshToken",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -69,7 +68,7 @@ export const refreshToken = async (req, res) => {
         const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
         const accessToken = jwt.sign(
-            { id: payload.id },
+            { id: payload.id, role: payload.role },
             process.env.JWT_SECRET,
             { expiresIn: "15m" }
         )

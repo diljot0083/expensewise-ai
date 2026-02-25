@@ -14,7 +14,7 @@ export const createExpense = async (req, res) => {
             currency: currency || "INR",
             date: new Date(date),
             category: category || "Uncatergorized",
-            merchent: merchant || "",
+            merchant: merchant || "",
             notes: notes || "",
             receiptUrl: receiptUrl || null
         });

@@ -6,7 +6,7 @@ const ExpenseSchema = new mongoose.Schema({
     currency: { type: String, default: "INR" },
     date: { type: Date, required: true, index: true },
     category: { type: String, default: "Uncategorized", index: true },
-    merchent: { type: String, default: "" },
+    merchant: { type: String, default: "" },
     notes: { type: String, default: "" },
     receiptUrl: { type: String, default: null },
 }, { timestamps: true });
