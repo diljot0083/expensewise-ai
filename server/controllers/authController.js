@@ -81,6 +81,10 @@ export const refreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-    res.clearCookie("refreshToken");
-    res.json({ message: "Logged out" })
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "lax",
+  });
+
+  res.json({ message: "Logged out" });
 };
