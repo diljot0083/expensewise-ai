@@ -1,21 +1,26 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const payload = { email, password };
-    console.log("Login data:", payload);
-
-    // later:
-    // POST /auth/login
-    // save JWT
-    // redirect to /dashboard
+    const res = await axios.post(
+      "/api/login",
+      { email, password },
+      { withCredentials: true }
+    );
+    login(res.data.accessToken, res.data.user);
+    navigate("/dashboard");
   };
 
   const handleGoogleLogin = () => {

@@ -67,11 +67,16 @@ export const refreshToken = async (req, res) => {
 
         const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
+        const user = await User.findById(payload.id).select("_id role");
+
+        if (!user)
+            return res.status(401).json({ message: "User not found" });
+
         const accessToken = jwt.sign(
-            { id: payload.id, role: payload.role },
-            process.env.JWT_SECRET,
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET, 
             { expiresIn: "15m" }
-        )
+        );
 
         res.json({ accessToken });
 
@@ -81,10 +86,10 @@ export const refreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    sameSite: "lax",
-  });
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "lax",
+    });
 
-  res.json({ message: "Logged out" });
+    res.json({ message: "Logged out" });
 };

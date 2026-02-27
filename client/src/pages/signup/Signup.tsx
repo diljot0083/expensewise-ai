@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Signup.css";
 
 const Signup = () => {
@@ -7,19 +8,23 @@ const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const payload = {
-            name,
-            email,
-            password,
-        };
+        try {
+            await axios.post("/api/register", {
+                name,
+                email,
+                password,
+            });
 
-        console.log("Signup data:", payload);
+            navigate("/login");
 
-        // later:
-        // send to backend -> /auth/register
+        } catch (error: any) {
+            console.error("Signup failed:", error.response?.data || error.message);
+        }
     };
 
     const handleGoogleSignup = () => {
