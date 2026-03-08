@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api, { setAxiosToken } from "../api/axios";
 
 interface User {
     id: string;
@@ -24,13 +24,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = (token: string, user: User) => {
         setAccessToken(token);
+        setAxiosToken(token);
         setUser(user);
     };
 
     const logout = async () => {
-        await axios.post("/api/logout", {}, { withCredentials: true });
-        setUser(null);
+        await api.post("/logout");
         setAccessToken(null);
+        setUser(null);
     };
 
     useEffect(() => {
@@ -41,12 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             try {
-                const res = await axios.get("/api/me", {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    withCredentials: true,
-                });
+                const res = await api.get("/me");
                 setUser(res.data);
             } catch {
                 setUser(null);

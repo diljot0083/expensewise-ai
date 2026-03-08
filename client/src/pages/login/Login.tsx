@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import "./Login.css";
 
@@ -14,11 +14,8 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await axios.post(
-      "/api/login",
-      { email, password },
-      { withCredentials: true }
-    );
+    const res = await api.post("/login", { email, password });
+    
     login(res.data.accessToken, res.data.user);
     navigate("/dashboard");
   };
