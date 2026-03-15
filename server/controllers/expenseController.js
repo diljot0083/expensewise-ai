@@ -33,7 +33,7 @@ export const listExpenses = async (req, res) => {
             page = 1, limit = 20, sort = "-date"
         } = req.query;
 
-        const filter = { userId: mongoose.Types.ObjectId(userId) };
+        const filter = { userId };
 
         if (from || to) {
             filter.date = {};

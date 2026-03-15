@@ -35,13 +35,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
-        const fetchMe = async () => {
-            if (!accessToken) {
-                setLoading(false);
-                return;
-            }
-
+        const restoreSession = async () => {
             try {
+                const refresh = await api.post("/refreshToken");
+
+                setAccessToken(refresh.data.accessToken);
+                setAxiosToken(refresh.data.accessToken);
+
                 const res = await api.get("/me");
                 setUser(res.data);
             } catch {
@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         };
 
-        fetchMe();
-    }, [accessToken]);
+        restoreSession();
+    }, []);
 
     return (
         <AuthContext.Provider
