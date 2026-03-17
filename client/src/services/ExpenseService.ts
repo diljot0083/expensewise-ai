@@ -20,6 +20,11 @@ export const createExpense = async (data: Partial<Expense>) => {
     return res.data;
 };
 
+export const updateExpense = async (id: string, data: Partial<Expense>) => {
+  const res = await api.put(`/expenses/${id}`, data);
+  return res.data;
+};
+
 export const deleteExpense = async (id: string) => {
     const res = await api.delete(`/expenses/${id}`);
     return res.data;

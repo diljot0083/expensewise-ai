@@ -1,18 +1,41 @@
-import { useState } from "react";
-import { createExpense } from "../../services/ExpenseService";
+import { useState, useEffect } from "react";
+import { createExpense, updateExpense } from "../../services/ExpenseService";
 
-const AddExpenseForm = ({ onCreated }: { onCreated: () => void }) => {
+const AddExpenseForm = ({
+    onCreated,
+    editing,
+    setEditing,
+}: {
+    onCreated: () => void;
+    editing?: any;
+    setEditing?: (val: any) => void;
+}) => {
     const [amount, setAmount] = useState("");
     const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        if (editing) {
+            setAmount(editing.amount.toString()); 
+            setCategory(editing.category);
+        }
+    }, [editing]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        await createExpense({
-            amount: Number(amount),
-            category,
-            date: new Date().toISOString(),
-        });
+        if (editing) {
+            await updateExpense(editing._id, {
+                amount: Number(amount),
+                category,
+            });
+            setEditing?.(null);
+        } else {
+            await createExpense({
+                amount: Number(amount),
+                category,
+                date: new Date().toISOString(),
+            });
+        }
 
         setAmount("");
         setCategory("");
@@ -37,9 +60,10 @@ const AddExpenseForm = ({ onCreated }: { onCreated: () => void }) => {
             />
 
             <button className="bg-emerald-500 text-white px-4 py-2">
-                Add Expense
+                {editing ? "Update Expense" : "Add Expense"}
             </button>
         </form>
     );
 };
+
 export default AddExpenseForm;

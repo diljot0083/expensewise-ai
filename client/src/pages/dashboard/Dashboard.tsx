@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getExpenses } from "../../services/ExpenseService";
+import { getExpenses, deleteExpense } from "../../services/ExpenseService";
 import type { Expense } from "../../services/ExpenseService";
 
 import ExpenseList from "../../components/expenses/ExpenseList";
@@ -10,12 +10,18 @@ import StatsCard from "../../components/StatsCard";
 
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [editing, setEditing] = useState<Expense | null>(null);
 
     const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
     const loadExpenses = async () => {
         const data = await getExpenses();
         setExpenses(data.items);
+    };
+
+    const handleDelete = async (id: string) => {
+        await deleteExpense(id);
+        loadExpenses();
     };
 
     useEffect(() => {
@@ -36,11 +42,19 @@ const Dashboard = () => {
 
                 {/* Add Expense */}
                 <div className="bg-white p-4 rounded-2xl shadow mb-6">
-                    <AddExpenseForm onCreated={loadExpenses} />
+                    <AddExpenseForm
+                        onCreated={loadExpenses}
+                        editing={editing}
+                        setEditing={setEditing}
+                    />
                 </div>
 
                 {/* Expense List */}
-                <ExpenseList expenses={expenses} />
+                <ExpenseList
+                    expenses={expenses}
+                    onDelete={handleDelete}
+                    onEdit={setEditing}
+                />
             </div>
         </div>
     );
