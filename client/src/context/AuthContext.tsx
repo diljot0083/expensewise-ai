@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logout = async () => {
         await api.post("/logout");
         setAccessToken(null);
+        setAxiosToken(null);
         setUser(null);
     };
 
