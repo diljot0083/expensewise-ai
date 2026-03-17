@@ -8,6 +8,9 @@ import AddExpenseForm from "../../components/expenses/AddExpenseForm";
 import Navbar from "../../components/Navbar";
 import StatsCard from "../../components/StatsCard";
 
+import MonthlyChart from "../../components/charts/MonthlyChart";
+import CategoryPie from "../../components/charts/CategoryPie";
+
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [editing, setEditing] = useState<Expense | null>(null);
@@ -38,6 +41,12 @@ const Dashboard = () => {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                     <StatsCard title="Total Spent" value={`₹${total}`} />
                     <StatsCard title="Transactions" value={expenses.length} />
+                </div>
+
+                {/* Charts */}
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                    <MonthlyChart expenses={expenses} />
+                    <CategoryPie expenses={expenses} />
                 </div>
 
                 {/* Add Expense */}
