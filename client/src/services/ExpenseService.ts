@@ -10,8 +10,8 @@ export interface Expense {
     notes: string,
 }
 
-export const getExpenses = async () => {
-    const res = await api.get("/expenses");
+export const getExpenses = async (params?: any) => {
+    const res = await api.get("/expenses", { params });
     return res.data;
 };
 
@@ -21,8 +21,8 @@ export const createExpense = async (data: Partial<Expense>) => {
 };
 
 export const updateExpense = async (id: string, data: Partial<Expense>) => {
-  const res = await api.put(`/expenses/${id}`, data);
-  return res.data;
+    const res = await api.put(`/expenses/${id}`, data);
+    return res.data;
 };
 
 export const deleteExpense = async (id: string) => {

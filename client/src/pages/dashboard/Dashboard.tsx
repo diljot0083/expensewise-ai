@@ -11,6 +11,8 @@ import StatsCard from "../../components/StatsCard";
 import MonthlyChart from "../../components/charts/MonthlyChart";
 import CategoryPie from "../../components/charts/CategoryPie";
 
+import ExpenseFilters from "../../components/filters/ExpenseFilters";
+
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [editing, setEditing] = useState<Expense | null>(null);
@@ -19,6 +21,17 @@ const Dashboard = () => {
 
     const loadExpenses = async () => {
         const data = await getExpenses();
+        setExpenses(data.items);
+    };
+
+    const handleFilter = async (filters: any) => {
+        const data = await getExpenses({
+            q: filters.search,
+            category: filters.category,
+            from: filters.from,
+            to: filters.to,
+        });
+
         setExpenses(data.items);
     };
 
@@ -42,6 +55,8 @@ const Dashboard = () => {
                     <StatsCard title="Total Spent" value={`₹${total}`} />
                     <StatsCard title="Transactions" value={expenses.length} />
                 </div>
+
+                <ExpenseFilters onFilter={handleFilter} />
 
                 {/* Charts */}
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
