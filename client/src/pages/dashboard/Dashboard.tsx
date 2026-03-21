@@ -13,15 +13,36 @@ import CategoryPie from "../../components/charts/CategoryPie";
 
 import ExpenseFilters from "../../components/filters/ExpenseFilters";
 
+import { getAIInsights } from "../../services/aiService";
+
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [editing, setEditing] = useState<Expense | null>(null);
+    const [insight, setInsight] = useState({
+        total: "",
+        topCategory: "",
+        advice: ""
+    });
 
-    const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+    const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
     const loadExpenses = async () => {
         const data = await getExpenses();
-        setExpenses(data.items);
+
+        const map = new Map<string, Expense>();
+
+        data.items.forEach((e: Expense) => {
+            map.set(e._id, e);
+        });
+
+        const unique = Array.from(map.values());
+
+        setExpenses(unique);
+    };
+
+    const loadInsights = async () => {
+        const res = await getAIInsights(expenses);
+        setInsight(res);
     };
 
     const handleFilter = async (filters: any) => {
@@ -44,6 +65,12 @@ const Dashboard = () => {
         loadExpenses();
     }, []);
 
+    useEffect(() => {
+        if (expenses.length > 0) {
+            loadInsights();
+        }
+    }, [expenses]);
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
@@ -57,6 +84,14 @@ const Dashboard = () => {
                 </div>
 
                 <ExpenseFilters onFilter={handleFilter} />
+
+                <div className="bg-white p-4 rounded-2xl shadow mb-6">
+                    <h2 className="text-lg font-semibold mb-2">AI Insights</h2>
+
+                    <p className="text-gray-700">💰 {insight.total}</p>
+                    <p className="text-gray-700">📊 Top Category: {insight.topCategory}</p>
+                    <p className="text-gray-700">💡 {insight.advice}</p>
+                </div>
 
                 {/* Charts */}
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
