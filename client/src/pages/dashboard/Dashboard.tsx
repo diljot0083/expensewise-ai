@@ -73,7 +73,14 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if (expenses.length === 0) return;
+        if (expenses.length === 0) {
+            setInsight({
+                total: "",
+                topCategory: "",
+                advice: ""
+            });
+            return;
+        }
 
         const timer = setTimeout(() => {
             loadInsights();
