@@ -12,6 +12,7 @@ import MonthlyChart from "../../components/charts/MonthlyChart";
 import CategoryPie from "../../components/charts/CategoryPie";
 
 import ExpenseFilters from "../../components/filters/ExpenseFilters";
+import InsightCard from "../../components/ai/InsightCard";
 
 import { getAIInsights } from "../../services/aiService";
 
@@ -23,6 +24,7 @@ const Dashboard = () => {
         topCategory: "",
         advice: ""
     });
+    const [loadingAI, setLoadingAI] = useState(false);
 
     const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
@@ -41,8 +43,13 @@ const Dashboard = () => {
     };
 
     const loadInsights = async () => {
-        const res = await getAIInsights(expenses);
-        setInsight(res);
+        setLoadingAI(true);
+        try {
+            const res = await getAIInsights(expenses);
+            setInsight(res);
+        } finally {
+            setLoadingAI(false);
+        }
     };
 
     const handleFilter = async (filters: any) => {
@@ -66,9 +73,13 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if (expenses.length > 0) {
+        if (expenses.length === 0) return;
+
+        const timer = setTimeout(() => {
             loadInsights();
-        }
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, [expenses]);
 
     return (
@@ -85,12 +96,19 @@ const Dashboard = () => {
 
                 <ExpenseFilters onFilter={handleFilter} />
 
-                <div className="bg-white p-4 rounded-2xl shadow mb-6">
-                    <h2 className="text-lg font-semibold mb-2">AI Insights</h2>
+                {/* Insights Cards */}
+                <div className="mb-6">
+                    <h2 className="text-lg font-semibold mb-3">AI Insights</h2>
 
-                    <p className="text-gray-700">💰 {insight.total}</p>
-                    <p className="text-gray-700">📊 Top Category: {insight.topCategory}</p>
-                    <p className="text-gray-700">💡 {insight.advice}</p>
+                    {loadingAI ? (
+                        <p className="text-gray-500">Generating insights...</p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <InsightCard title="💰 Total Spent" value={insight.total} />
+                            <InsightCard title="📊 Top Category" value={insight.topCategory} />
+                            <InsightCard title="💡 Advice" value={insight.advice} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Charts */}
@@ -100,7 +118,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Add Expense */}
-                <div className="bg-white p-4 rounded-2xl shadow mb-6">
+                <div className="bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition duration-300 mb-6">
                     <AddExpenseForm
                         onCreated={loadExpenses}
                         editing={editing}
