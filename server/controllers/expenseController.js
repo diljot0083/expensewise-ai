@@ -13,7 +13,7 @@ export const createExpense = async (req, res) => {
             amount,
             currency: currency || "INR",
             date: new Date(date),
-            category: category || "Uncatergorized",
+            category: category || "General",
             merchant: merchant || "",
             notes: notes || "",
             receiptUrl: receiptUrl || null

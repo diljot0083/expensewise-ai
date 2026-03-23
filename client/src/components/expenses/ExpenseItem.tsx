@@ -11,7 +11,12 @@ const ExpenseItem = ({ expense, onEdit, onDelete }: Props) => {
         <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition duration-300">
             <div>
                 <p className="font-semibold">{expense.category}</p>
-                <p className="text-sm text-gray-500">
+
+                <p className="text-sm text-gray-600">
+                    {expense.merchant || ""}
+                </p>
+
+                <p className="text-xs text-gray-400">
                     {new Date(expense.date).toLocaleDateString()}
                 </p>
             </div>
