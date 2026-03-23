@@ -8,7 +8,7 @@ interface Props {
 
 const ExpenseItem = ({ expense, onEdit, onDelete }: Props) => {
     return (
-        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
+        <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition duration-300">
             <div>
                 <p className="font-semibold">{expense.category}</p>
                 <p className="text-sm text-gray-500">
