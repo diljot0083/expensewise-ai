@@ -16,6 +16,9 @@ import InsightCard from "../../components/ai/InsightCard";
 
 import { getAIInsights } from "../../services/aiService";
 
+import WeeklyChart from "../../components/charts/WeeklyChart";
+import WeeklyComparison from "../../components/charts/WeeklyComparison";
+
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [editing, setEditing] = useState<Expense | null>(null);
@@ -122,6 +125,11 @@ const Dashboard = () => {
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
                     <MonthlyChart expenses={expenses} />
                     <CategoryPie expenses={expenses} />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                    <WeeklyChart expenses={expenses} />
+                    <WeeklyComparison expenses={expenses} />
                 </div>
 
                 {/* Add Expense */}
