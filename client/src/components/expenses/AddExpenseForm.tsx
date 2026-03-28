@@ -48,14 +48,17 @@ const AddExpenseForm = ({
         onCreated();
     };
 
+    const inputClass =
+        "flex-1 min-w-0 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-600 focus:border-transparent transition-all duration-200";
+
     return (
-        <form onSubmit={handleSubmit} className="flex gap-4 items-center w-full">
+        <form onSubmit={handleSubmit} className="flex gap-3 items-center w-full">
             <input
                 type="number"
                 placeholder="Amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="flex-1 min-w-[120px] border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className={`${inputClass} max-w-[110px]`}
             />
 
             <input
@@ -63,7 +66,7 @@ const AddExpenseForm = ({
                 placeholder="Category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="flex-1 min-w-[150px] border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className={inputClass}
             />
 
             <input
@@ -71,15 +74,30 @@ const AddExpenseForm = ({
                 placeholder="Merchant (e.g. Amazon)"
                 value={merchant}
                 onChange={(e) => setMerchant(e.target.value)}
-                className="flex-1 min-w-[200px] border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className={inputClass}
             />
 
             <button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg whitespace-nowrap"
+                className="bg-violet-600 hover:bg-violet-700 active:scale-95 text-white text-sm font-medium px-5 py-2.5 rounded-xl whitespace-nowrap transition-all duration-150 shadow-sm shadow-violet-200 dark:shadow-violet-900/30"
             >
-                {editing ? "Update" : "Add"}
+                {editing ? "Update" : "+ Add"}
             </button>
+
+            {editing && (
+                <button
+                    type="button"
+                    onClick={() => {
+                        setEditing?.(null);
+                        setAmount("");
+                        setCategory("");
+                        setMerchant("");
+                    }}
+                    className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-2 transition-colors"
+                >
+                    Cancel
+                </button>
+            )}
         </form>
     );
 };

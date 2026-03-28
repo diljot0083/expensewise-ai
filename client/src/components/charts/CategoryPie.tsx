@@ -3,9 +3,12 @@ import {
     Pie,
     Tooltip,
     ResponsiveContainer,
+    Cell,
 } from "recharts";
 
 import type { Expense } from "../../services/ExpenseService";
+
+const COLORS = ["#7c3aed", "#0d9488", "#d97706", "#db2777", "#2563eb", "#16a34a", "#dc2626"];
 
 const groupByCategory = (expenses: Expense[]) => {
     const map: Record<string, number> = {};
@@ -22,17 +25,55 @@ const groupByCategory = (expenses: Expense[]) => {
 
 const CategoryPie = ({ expenses }: { expenses: Expense[] }) => {
     const data = groupByCategory(expenses);
+    const isDark = document.documentElement.classList.contains("dark");
 
     return (
-        <div className="bg-white p-4 rounded-2xl shadow">
-            <h2 className="text-lg font-semibold mb-4">Category Breakdown</h2>
+        <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
+                Category Breakdown
+            </h2>
 
-            <ResponsiveContainer width="100%" height={250}>
+            <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                    <Pie data={data} dataKey="value" outerRadius={90} />
-                    <Tooltip />
+                    <Pie
+                        data={data}
+                        dataKey="value"
+                        outerRadius={80}
+                        innerRadius={40}
+                        paddingAngle={3}
+                        strokeWidth={0}
+                    >
+                        {data.map((_, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                    </Pie>
+                    <Tooltip
+                        contentStyle={{
+                            background: isDark ? "#111827" : "#ffffff",
+                            border: `1px solid ${isDark ? "#1f2937" : "#e5e7eb"}`,
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            color: isDark ? "#f3f4f6" : "#111827",
+                        }}
+                        formatter={(value, name) => [`₹${Number(value ?? 0)}`, name]}
+                    />
                 </PieChart>
             </ResponsiveContainer>
+
+            {/* Legend */}
+            <div className="flex flex-wrap gap-x-3 gap-y-1.5 mt-3">
+                {data.map((entry, index) => (
+                    <div key={entry.name} className="flex items-center gap-1.5">
+                        <div
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ background: COLORS[index % COLORS.length] }}
+                        />
+                        <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                            {entry.name}
+                        </span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

@@ -30,6 +30,7 @@ const Dashboard = () => {
     const [loadingAI, setLoadingAI] = useState(false);
 
     const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+    const avg = expenses.length > 0 ? Math.round(total / expenses.length) : 0;
 
     const loadExpenses = async () => {
         const data = await getExpenses();
@@ -93,27 +94,46 @@ const Dashboard = () => {
     }, [expenses]);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
             <Navbar />
 
-            <div className="p-6 max-w-5xl mx-auto">
+            <div className="p-5 max-w-5xl mx-auto">
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                    <StatsCard title="Total Spent" value={`₹${total}`} />
-                    <StatsCard title="Transactions" value={expenses.length} />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+                    <StatsCard
+                        title="Total Spent"
+                        value={`₹${total}`}
+                        sub={`${expenses.length} transactions`}
+                        variant="hero"
+                    />
+                    <StatsCard
+                        title="Transactions"
+                        value={expenses.length}
+                    />
+                    <StatsCard
+                        title="Avg per txn"
+                        value={`₹${avg}`}
+                    />
                 </div>
 
                 <ExpenseFilters onFilter={handleFilter} />
 
-                {/* Insights Cards */}
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-3">AI Insights</h2>
+                {/* AI Insights */}
+                <div className="mb-5">
+                    <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                        AI Insights
+                    </h2>
 
                     {loadingAI ? (
-                        <p className="text-gray-500">Generating insights...</p>
+                        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
+                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.15s]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.3s]" />
+                            <span className="ml-1">Generating insights...</span>
+                        </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <InsightCard title="💰 Total Spent" value={insight.total} />
                             <InsightCard title="📊 Top Category" value={insight.topCategory} />
                             <InsightCard title="💡 Advice" value={insight.advice} />
@@ -122,18 +142,21 @@ const Dashboard = () => {
                 </div>
 
                 {/* Charts */}
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="grid md:grid-cols-2 gap-3 mb-5">
                     <MonthlyChart expenses={expenses} />
                     <CategoryPie expenses={expenses} />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="grid md:grid-cols-2 gap-3 mb-5">
                     <WeeklyChart expenses={expenses} />
                     <WeeklyComparison expenses={expenses} />
                 </div>
 
                 {/* Add Expense */}
-                <div className="bg-white p-4 rounded-2xl shadow-md hover:shadow-lg transition duration-300 mb-6">
+                <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl mb-5">
+                    <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                        {editing ? "Edit Expense" : "Add Expense"}
+                    </h2>
                     <AddExpenseForm
                         onCreated={loadExpenses}
                         editing={editing}
