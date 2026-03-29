@@ -21,37 +21,35 @@ const CATEGORY_STYLES: Record<string, { emoji: string; bg: string; dark: string 
 
 const getCategoryStyle = (category: string) => {
     const key = category.toLowerCase();
-    return CATEGORY_STYLES[key] ?? { emoji: "💳", bg: "bg-gray-100", dark: "dark:bg-gray-800" };
+    return CATEGORY_STYLES[key] ?? { emoji: "💳", bg: "bg-violet-50", dark: "dark:bg-gray-800" };
 };
 
 const ExpenseItem = ({ expense, onEdit, onDelete }: Props) => {
     const style = getCategoryStyle(expense.category);
 
     return (
-        <div className="group flex justify-between items-center bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl hover:border-violet-200 dark:hover:border-violet-800 hover:translate-x-0.5 transition-all duration-200">
+        <div className="group flex justify-between items-center bg-white/70 dark:bg-gray-900/80 backdrop-blur-sm border border-violet-100/60 dark:border-gray-800 p-4 rounded-2xl hover:border-violet-300 dark:hover:border-violet-800 hover:translate-x-0.5 transition-all duration-200">
             <div className="flex items-center gap-3">
-                {/* Category icon bubble */}
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 ${style.bg} ${style.dark}`}>
                     {style.emoji}
                 </div>
 
                 <div>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 capitalize">
+                    <p className="text-sm font-semibold text-violet-950 dark:text-gray-100 capitalize">
                         {expense.category}
                     </p>
                     {expense.merchant && (
-                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                        <p className="text-xs text-violet-400 dark:text-gray-500">
                             {expense.merchant}
                         </p>
                     )}
-                    <p className="text-xs text-gray-300 dark:text-gray-600">
+                    <p className="text-xs text-violet-300 dark:text-gray-600">
                         {new Date(expense.date).toLocaleDateString()}
                     </p>
                 </div>
             </div>
 
             <div className="flex items-center gap-3">
-                {/* Actions — hidden until hover */}
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                     <button
                         onClick={() => onEdit(expense)}
@@ -67,7 +65,7 @@ const ExpenseItem = ({ expense, onEdit, onDelete }: Props) => {
                     </button>
                 </div>
 
-                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 tabular-nums">
+                <p className="text-sm font-semibold text-violet-950 dark:text-gray-100 tabular-nums">
                     ₹{expense.amount}
                 </p>
             </div>

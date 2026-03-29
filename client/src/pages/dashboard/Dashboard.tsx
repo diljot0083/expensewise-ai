@@ -34,15 +34,11 @@ const Dashboard = () => {
 
     const loadExpenses = async () => {
         const data = await getExpenses();
-
         const map = new Map<string, Expense>();
-
         data.items.forEach((e: Expense) => {
             map.set(e._id, e);
         });
-
         const unique = Array.from(map.values());
-
         setExpenses(unique);
     };
 
@@ -63,7 +59,6 @@ const Dashboard = () => {
             from: filters.from,
             to: filters.to,
         });
-
         setExpenses(data.items);
     };
 
@@ -78,23 +73,18 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (expenses.length === 0) {
-            setInsight({
-                total: "",
-                topCategory: "",
-                advice: ""
-            });
+            setInsight({ total: "", topCategory: "", advice: "" });
             return;
         }
-
         const timer = setTimeout(() => {
             loadInsights();
         }, 500);
-
         return () => clearTimeout(timer);
     }, [expenses]);
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+        /* Remove bg-gray-50 — let index.css mesh gradient show through */
+        <div className="min-h-screen transition-colors duration-300">
             <Navbar />
 
             <div className="p-5 max-w-5xl mx-auto">
@@ -107,26 +97,20 @@ const Dashboard = () => {
                         sub={`${expenses.length} transactions`}
                         variant="hero"
                     />
-                    <StatsCard
-                        title="Transactions"
-                        value={expenses.length}
-                    />
-                    <StatsCard
-                        title="Avg per txn"
-                        value={`₹${avg}`}
-                    />
+                    <StatsCard title="Transactions" value={expenses.length} />
+                    <StatsCard title="Avg per txn" value={`₹${avg}`} />
                 </div>
 
                 <ExpenseFilters onFilter={handleFilter} />
 
                 {/* AI Insights */}
                 <div className="mb-5">
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                    <h2 className="text-xs font-semibold uppercase tracking-widest text-violet-400 dark:text-gray-500 mb-3">
                         AI Insights
                     </h2>
 
                     {loadingAI ? (
-                        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-violet-400 dark:text-gray-500">
                             <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" />
                             <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.15s]" />
                             <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.3s]" />
@@ -153,8 +137,8 @@ const Dashboard = () => {
                 </div>
 
                 {/* Add Expense */}
-                <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl mb-5">
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                <div className="bg-white/70 dark:bg-gray-900/80 backdrop-blur-sm border border-violet-100/50 dark:border-gray-800 p-4 rounded-2xl mb-5">
+                    <h2 className="text-xs font-semibold uppercase tracking-widest text-violet-400 dark:text-gray-500 mb-3">
                         {editing ? "Edit Expense" : "Add Expense"}
                     </h2>
                     <AddExpenseForm
