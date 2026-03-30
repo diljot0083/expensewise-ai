@@ -74,7 +74,7 @@ export const refreshToken = async (req, res) => {
 
         const accessToken = jwt.sign(
             { id: user._id, role: user.role },
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET,
             { expiresIn: "15m" }
         );
 
@@ -92,4 +92,34 @@ export const logout = async (req, res) => {
     });
 
     res.json({ message: "Logged out" });
+};
+
+export const googleCallback = async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user) return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
+
+        const accessToken = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "15m" }
+        );
+
+        const refreshToken = jwt.sign(
+            { id: user._id },
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`);
+    } catch (error) {
+        res.redirect(`${process.env.CLIENT_URL}/login?error=server_error`);
+    }
 };

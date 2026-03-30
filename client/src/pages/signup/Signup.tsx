@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -17,7 +17,7 @@ const Signup = () => {
         setError("");
         setLoading(true);
         try {
-            await axios.post("/api/register", { name, email, password });
+            await api.post("/auth/register", { name, email, password });
             navigate("/login");
         } catch (err: any) {
             setError(err.response?.data?.message || "Signup failed. Please try again.");
@@ -27,7 +27,7 @@ const Signup = () => {
     };
 
     const handleGoogleSignup = () => {
-        console.log("Google signup clicked");
+        window.location.href = "http://localhost:5000/api/auth/google";
     };
 
     const inputClass =

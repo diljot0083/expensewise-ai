@@ -5,6 +5,7 @@ import Login from "../pages/login/Login";
 import Signup from "../pages/signup/Signup";
 import Dashboard from "../pages/dashboard/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import AuthCallback from "../pages/auth/AuthCallback";
 
 const AppRoutes = () => {
     return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
 
                 {/* Protected routes */}
                 <Route
@@ -24,7 +26,7 @@ const AppRoutes = () => {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="*" element={<Navigate to="/" />} />    
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </BrowserRouter>
     );

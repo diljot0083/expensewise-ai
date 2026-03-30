@@ -18,7 +18,7 @@ const Login = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post("/login", { email, password });
+      const res = await api.post("/auth/login", { email, password });
       login(res.data.accessToken, res.data.user);
       navigate("/dashboard");
     } catch (err: any) {
@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    console.log("Google login clicked");
+    window.location.href = "http://localhost:5000/api/auth/google";
   };
 
   const inputClass =
