@@ -32,7 +32,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const res = await api.post("/refreshToken");
+                const res = await api.post("/auth/refreshToken");
                 setAxiosToken(res.data.accessToken);
 
                 originalRequest.headers.Authorization =
