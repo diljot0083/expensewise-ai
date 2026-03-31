@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/axios";
+import { setAxiosToken } from "../../api/axios";
 
 const AuthCallback = () => {
     const { login } = useAuth();
@@ -18,14 +19,14 @@ const AuthCallback = () => {
         }
 
         if (token) {
+            setAxiosToken(token);
+
             api.get("/auth/me", {
                 headers: { Authorization: `Bearer ${token}` }
             }).then((res) => {
                 login(token, res.data);
                 navigate("/dashboard");
             }).catch(() => navigate("/login"));
-        } else {
-            navigate("/login");
         }
     }, []);
 

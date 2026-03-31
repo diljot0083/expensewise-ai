@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "lax",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
@@ -99,7 +99,10 @@ export const logout = async (req, res) => {
 export const googleCallback = async (req, res) => {
     try {
         const user = req.user;
-        if (!user) return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
+
+        if (!user) {
+            return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
+        }
 
         const accessToken = jwt.sign(
             { id: user._id, role: user.role },
@@ -116,11 +119,15 @@ export const googleCallback = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`);
+        res.redirect(
+            `${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`
+        );
+
     } catch (error) {
         res.redirect(`${process.env.CLIENT_URL}/login?error=server_error`);
     }
