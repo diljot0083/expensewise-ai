@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: "strict",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
@@ -89,7 +89,7 @@ export const refreshToken = async (req, res) => {
 export const logout = async (req, res) => {
     res.clearCookie("refreshToken", {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "strict",
         path: "/",
     });
 
@@ -116,7 +116,7 @@ export const googleCallback = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
