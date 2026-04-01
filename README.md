@@ -15,7 +15,7 @@ https://expensewise-ai.vercel.app/
 * Category-based filtering
 * Weekly and monthly spending analysis
 * Interactive charts (category breakdown & trends)
-* Basic AI-powered insights (spending summary, top category, advice)
+* AI-powered insights (spending summary, top category, smart suggestions)
 * Secure authentication with Google OAuth and JWT
 * Clean UI with dark mode
 * Real-time data handling with backend integration
