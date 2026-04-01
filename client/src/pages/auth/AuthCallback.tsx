@@ -23,10 +23,12 @@ const AuthCallback = () => {
 
             api.get("/auth/me", {
                 headers: { Authorization: `Bearer ${token}` }
-            }).then((res) => {
-                login(token, res.data);
-                navigate("/dashboard");
-            }).catch(() => navigate("/login"));
+            })
+                .then((res) => {
+                    login(token, res.data);
+                    navigate("/dashboard");
+                })
+                .catch(() => navigate("/login"));
         }
     }, []);
 
