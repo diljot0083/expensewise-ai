@@ -34,7 +34,7 @@ const Landing = () => {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
           <span className="text-base font-semibold tracking-tight text-violet-950">
-            ExpenseWise
+            ExpenseWise AI
           </span>
         </div>
         <div className="flex items-center gap-3">

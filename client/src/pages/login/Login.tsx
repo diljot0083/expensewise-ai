@@ -47,7 +47,7 @@ const Login = () => {
         <div className="flex items-center justify-center gap-2 mb-8">
           <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
           <span className="text-base font-semibold tracking-tight text-violet-950">
-            ExpenseWise
+            ExpenseWise AI
           </span>
         </div>
 
