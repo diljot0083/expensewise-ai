@@ -30,8 +30,7 @@ const ExpenseFilters = ({ onFilter }: Props) => {
                 Filters
             </h2>
 
-            {/* Row 1: Search + Category */}
-            <div className="grid grid-cols-2 gap-2.5 mb-2.5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                 <input
                     className={inputClass}
                     placeholder="Search..."
@@ -44,10 +43,6 @@ const ExpenseFilters = ({ onFilter }: Props) => {
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                 />
-            </div>
-
-            {/* Row 2: Date From + Date To */}
-            <div className="grid grid-cols-2 gap-2.5">
                 <input
                     type={fromType}
                     className={inputClass}
