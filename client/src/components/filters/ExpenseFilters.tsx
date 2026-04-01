@@ -14,13 +14,11 @@ const ExpenseFilters = ({ onFilter }: Props) => {
     const [category, setCategory] = useState("");
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
-
-    const applyFilters = () => {
-        onFilter({ search, category, from, to });
-    };
+    const [fromType, setFromType] = useState<"text" | "date">("text");
+    const [toType, setToType] = useState<"text" | "date">("text");
 
     useEffect(() => {
-        applyFilters();
+        onFilter({ search, category, from, to });
     }, [search, category, from, to]);
 
     const inputClass =
@@ -32,7 +30,8 @@ const ExpenseFilters = ({ onFilter }: Props) => {
                 Filters
             </h2>
 
-            <div className="grid md:grid-cols-4 gap-2.5">
+            {/* Row 1: Search + Category */}
+            <div className="grid grid-cols-2 gap-2.5 mb-2.5">
                 <input
                     className={inputClass}
                     placeholder="Search..."
@@ -45,17 +44,27 @@ const ExpenseFilters = ({ onFilter }: Props) => {
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                 />
+            </div>
+
+            {/* Row 2: Date From + Date To */}
+            <div className="grid grid-cols-2 gap-2.5">
                 <input
-                    type="date"
+                    type={fromType}
                     className={inputClass}
+                    placeholder="Date From"
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}
+                    onFocus={() => setFromType("date")}
+                    onBlur={() => { if (!from) setFromType("text"); }}
                 />
                 <input
-                    type="date"
+                    type={toType}
                     className={inputClass}
+                    placeholder="Date To"
                     value={to}
                     onChange={(e) => setTo(e.target.value)}
+                    onFocus={() => setToType("date")}
+                    onBlur={() => { if (!to) setToType("text"); }}
                 />
             </div>
         </div>
