@@ -43,12 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setAccessToken(refresh.data.accessToken);
                 setAxiosToken(refresh.data.accessToken);
 
-                const res = await api.get("/auth/me", {
-                    headers: {
-                        Authorization: `Bearer ${refresh.data.accessToken}`
-                    }
-                });
-                setUser(res.data);
+                setUser(refresh.data.user);
             } catch {
                 setUser(null);
                 setAccessToken(null);

@@ -72,7 +72,7 @@ export const refreshToken = async (req, res) => {
 
         const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
-        const user = await User.findById(payload.id).select("_id role");
+        const user = await User.findById(payload.id).select("_id role name");
 
         if (!user)
             return res.status(401).json({ message: "User not found" });
@@ -83,7 +83,10 @@ export const refreshToken = async (req, res) => {
             { expiresIn: "15m" }
         );
 
-        res.json({ accessToken });
+        res.json({
+            accessToken,
+            user: { id: user._id, name: user.name, role: user.role }
+        });
 
     } catch (error) {
         res.status(401).json({ message: "Invalid Refresh Token" })
