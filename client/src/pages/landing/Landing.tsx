@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import Typing from "../../hooks/Typing";
 
 const FEATURES = [
@@ -10,12 +11,19 @@ const FEATURES = [
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading]);
 
   return (
     <div className="relative min-h-[100svh] w-full overflow-hidden landing-bg">
