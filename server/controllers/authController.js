@@ -29,6 +29,10 @@ export const login = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
+        if (!user.passwordHash) {
+            return res.status(400).json({ message: "This account uses Google sign-in" });
+        }
+
         const match = await bcrypt.compare(password, user.passwordHash);
         if (!match) return res.status(400).json({ message: "Invalid credentials" });
 
@@ -47,7 +51,7 @@ export const login = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: "strict",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
@@ -90,7 +94,7 @@ export const logout = async (req, res) => {
     res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "strict",
         path: "/",
     });
 
@@ -100,10 +104,7 @@ export const logout = async (req, res) => {
 export const googleCallback = async (req, res) => {
     try {
         const user = req.user;
-
-        if (!user) {
-            return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
-        }
+        if (!user) return res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
 
         const accessToken = jwt.sign(
             { id: user._id, role: user.role },
@@ -120,14 +121,12 @@ export const googleCallback = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: "strict",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.redirect(
-            `${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`
-        );
+        res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`);
 
     } catch (error) {
         res.redirect(`${process.env.CLIENT_URL}/login?error=server_error`);

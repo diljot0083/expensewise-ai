@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import api from "../../api/axios";
-import { setAxiosToken } from "../../api/axios";
+import api, { setAxiosToken } from "../../api/axios";
 
 const AuthCallback = () => {
     const { login } = useAuth();
@@ -29,6 +28,8 @@ const AuthCallback = () => {
                     navigate("/dashboard");
                 })
                 .catch(() => navigate("/login"));
+        } else {
+            navigate("/login");
         }
     }, []);
 
@@ -40,7 +41,6 @@ const AuthCallback = () => {
                 <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.3s]" />
                 <span className="text-sm text-violet-500 ml-1">Signing you in...</span>
             </div>
-
             <style>{`
                 .landing-bg {
                     background-color: #f5f3ff;
