@@ -19,6 +19,8 @@ import { getAIInsights } from "../../services/aiService";
 import WeeklyChart from "../../components/charts/WeeklyChart";
 import WeeklyComparison from "../../components/charts/WeeklyComparison";
 
+import { ExpenseListSkeleton, InsightSkeleton } from "../../components/Skeleton";
+
 const Dashboard = () => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [editing, setEditing] = useState<Expense | null>(null);
@@ -28,18 +30,22 @@ const Dashboard = () => {
         advice: ""
     });
     const [loadingAI, setLoadingAI] = useState(false);
+    const [loadingExpenses, setLoadingExpenses] = useState(true);
 
     const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
     const avg = expenses.length > 0 ? Math.round(total / expenses.length) : 0;
 
     const loadExpenses = async () => {
-        const data = await getExpenses();
-        const map = new Map<string, Expense>();
-        data.items.forEach((e: Expense) => {
-            map.set(e._id, e);
-        });
-        const unique = Array.from(map.values());
-        setExpenses(unique);
+        try {
+            const data = await getExpenses();
+            const map = new Map<string, Expense>();
+            data.items.forEach((e: Expense) => {
+                map.set(e._id, e);
+            });
+            setExpenses(Array.from(map.values()));
+        } finally {
+            setLoadingExpenses(false);
+        }
     };
 
     const loadInsights = async () => {
@@ -83,7 +89,6 @@ const Dashboard = () => {
     }, [expenses]);
 
     return (
-        /* Remove bg-gray-50 — let index.css mesh gradient show through */
         <div className="min-h-screen transition-colors duration-300">
             <Navbar />
 
@@ -110,12 +115,7 @@ const Dashboard = () => {
                     </h2>
 
                     {loadingAI ? (
-                        <div className="flex items-center gap-2 text-sm text-violet-400 dark:text-gray-500">
-                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.15s]" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.3s]" />
-                            <span className="ml-1">Generating insights...</span>
-                        </div>
+                        <InsightSkeleton />
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <InsightCard title="💰 Total Spent" value={insight.total} />
@@ -149,11 +149,15 @@ const Dashboard = () => {
                 </div>
 
                 {/* Expense List */}
-                <ExpenseList
-                    expenses={expenses}
-                    onDelete={handleDelete}
-                    onEdit={setEditing}
-                />
+                {loadingExpenses ? (
+                    <ExpenseListSkeleton />
+                ) : (
+                    <ExpenseList
+                        expenses={expenses}
+                        onDelete={handleDelete}
+                        onEdit={setEditing}
+                    />
+                )}
             </div>
         </div>
     );

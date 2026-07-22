@@ -37,14 +37,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const restoreSession = async () => {
+            const timeout = setTimeout(() => {
+                setUser(null);
+                setAccessToken(null);
+                setLoading(false);
+            }, 10000);
+
             try {
                 const refresh = await api.post("/auth/refreshToken");
+                clearTimeout(timeout);
 
                 setAccessToken(refresh.data.accessToken);
                 setAxiosToken(refresh.data.accessToken);
 
-                setUser(refresh.data.user);
+                const res = await api.get("/auth/me");
+                setUser(res.data);
             } catch {
+                clearTimeout(timeout);
                 setUser(null);
                 setAccessToken(null);
             } finally {
@@ -62,7 +71,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             {children}
         </AuthContext.Provider>
     );
-
 };
 
 export const useAuth = () => {
